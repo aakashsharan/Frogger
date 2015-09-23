@@ -8,6 +8,12 @@ It's an arcade game similar to Frogger. The game is developed using HTML, CSS an
 
 ===============================================================================
 
+How to run the game?
+
+Once you clone or download the repository, you can find index.html inside the Frogger directory. Open index.html on a browser and the game will start automatically.
+
+===============================================================================
+
 How is it played?
 
 There will be a hero and three enemy bugs.
