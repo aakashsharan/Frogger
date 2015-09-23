@@ -20,11 +20,9 @@ Enemy.prototype.update = function(dt) {
     // which will ensure the game runs at the same speed for
     // all computers.
 
-    // console.log(this.x);
     this.x += this.speed * dt;
-    // console.log(this.x);
 
-    if (this.x >= 500) {
+    if (this.x >= 700) {
         this.resetBug();
     }
 
@@ -44,14 +42,18 @@ Enemy.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+
+// create 3 enemy players.
 var enemy1 = new Enemy(65, Math.floor(Math.random() * 450 + 1));
 var enemy2 = new Enemy(150, Math.floor(Math.random() * 450 + 1));
-var enemy3 = new Enemy(150, Math.floor(Math.random() * 450 + 1));
+var enemy3 = new Enemy(225, Math.floor(Math.random() * 450 + 1));
 
 // Now write your own player class
 // This class requires an update(), render() and
 // a handleInput() method.
 
+
+// player class
 var Player = function(x, y, speed) {
     this.sprite = 'images/char-boy.png';
 
@@ -61,46 +63,51 @@ var Player = function(x, y, speed) {
     this.speed = speed;
 };
 
+
+// player's update function. this function does two purposes. first it checks that the player doesn't go off the canvas
+// the second purpose is to call the collision function
 Player.prototype.update = function() {
+
     if (this.x < 0) {
         this.x = 0;
     }
-    if (this.x > 400) {
-        this.x = 400;
+    else if (this.x > 700) {
+        this.x = 700;
     }
-    if (this.y < 0) {
+    else if (this.y < 0) {
         this.y = 405;
     }
-    if (this.y > 405) {
+    else if (this.y > 405) {
         this.y = 405;
     }
     this.collide();
 };
 
+// draw the player on the screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
+// resets the player location. this is basically called when the collision happens with the enemy.
 Player.prototype.resetPlayer = function() {
     this.x = 300;
     this.y = 400;
-}
+};
 
+
+// handleInput function moves the player depending on the keys pressed by the player.
 Player.prototype.handleInput = function(keycode) {
     switch(keycode) {
         case "left":
-            console.log("left");
             this.x -= 100;
             break;
         case "right":
-            console.log("right");
             this.x += 100;
             break;
         case "up":
             this.y -= 90;
             break;
         case "down":
-            console.log("down");
             this.y += 90;
             break;
     }
@@ -111,12 +118,14 @@ var allEnemies = [];
 
 allEnemies.push(enemy1, enemy2, enemy3);
 
+
+// collide function checks if a collision happens between player and the enemies.
+// if there's a collision then it resets both the player and the enemy.
 Player.prototype.collide = function() {
     for (var i = 0; i < allEnemies.length; i++) {
-        console.log(this.x);
-        allEnemies[i].x
         if (this.x < allEnemies[i].x + 50 && this.x + 50 > allEnemies[i].x && this.y < allEnemies[i].y + 30 && this.y + 30 > allEnemies[i].y) {
-            console.log("collision");
+            // plays sound on collision
+            document.getElementById('sound-two').play();
             this.resetPlayer();
             allEnemies[i].resetBug();
             break;
@@ -124,16 +133,8 @@ Player.prototype.collide = function() {
     }
 };
 
-
-
 // Now instantiate your objects.
 var player = new Player(300, 400, Math.random() * (500 - 100) + 100);
-
-
-
-
-// Place the player object in a variable called player
-
 
 
 // This listens for key presses and sends the keys to your
@@ -149,3 +150,8 @@ document.addEventListener('keyup', function(e) {
     player.handleInput(allowedKeys[e.keyCode]);
 });
 
+// plays sound on only when left or right or down or up arrows are pressed.
+document.onkeydown = function(e) {
+    if (e.keyCode == 37 || e.keyCode == 38 || e.keyCode == 39 || e.keyCode == 40)
+    document.getElementById('sound-one').play();
+};
